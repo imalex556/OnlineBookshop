@@ -41,13 +41,13 @@ public class BookController {
         model.addAttribute("books", books);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
-        return "books/list";
+        return "books_list";
     }
 
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("book", new Book());
-        return "books/add";
+        return "books_add";
     }
 
     @PostMapping("/add")
@@ -60,7 +60,7 @@ public class BookController {
     public String showEditForm(@PathVariable Long id, Model model) {
         Book book = bookService.getBookById(id);
         model.addAttribute("book", book);
-        return "books/edit";
+        return "books_edit";
     }
 
     @PostMapping("/edit/{id}")
