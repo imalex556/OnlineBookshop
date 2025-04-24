@@ -25,7 +25,6 @@ public class CustomerProfileController {
         if (user == null) {
             return "redirect:/login";
         }
-        // Reload user from database to get latest info
         user = userRepository.findById(user.getUserId()).orElse(null);
         model.addAttribute("user", user);
         return "customer-profile";
@@ -39,14 +38,16 @@ public class CustomerProfileController {
             return "redirect:/login";
         }
         
-        // Update only the allowed fields
         User user = userRepository.findById(currentUser.getUserId()).orElse(null);
         if (user != null) {
             user.setEmail(updatedUser.getEmail());
             user.setShippingAddress(updatedUser.getShippingAddress());
             user.setPaymentMethod(updatedUser.getPaymentMethod());
+            user.setCardNumber(updatedUser.getCardNumber());
+            user.setExpiryDate(updatedUser.getExpiryDate());
+            user.setCvv(updatedUser.getCvv());
             userRepository.save(user);
-            session.setAttribute("user", user); // Update session
+            session.setAttribute("user", user);
         }
         return "redirect:/customer/profile?success";
     }

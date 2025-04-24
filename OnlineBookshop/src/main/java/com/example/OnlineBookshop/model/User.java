@@ -27,8 +27,16 @@ public class User {
     
     @Column(name = "payment_method")
     private String paymentMethod;
+    
+    @Column(name = "card_number")
+    private String cardNumber;
+    
+    @Column(name = "expiry_date")
+    private String expiryDate;
+    
+    @Column(name = "cvv")
+    private String cvv;
 
-    // Getters and Setters
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
     public String getUsername() { return username; }
@@ -43,6 +51,12 @@ public class User {
     public void setShippingAddress(String shippingAddress) { this.shippingAddress = shippingAddress; }
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    public String getCardNumber() { return cardNumber; }
+    public void setCardNumber(String cardNumber) { this.cardNumber = cardNumber; }
+    public String getExpiryDate() { return expiryDate; }
+    public void setExpiryDate(String expiryDate) { this.expiryDate = expiryDate; }
+    public String getCvv() { return cvv; }
+    public void setCvv(String cvv) { this.cvv = cvv; }
 
     public enum Role {
         CUSTOMER, ADMIN
