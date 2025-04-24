@@ -31,6 +31,9 @@
         .out-of-stock {
             opacity: 0.7;
         }
+        .cart-badge {
+            font-size: 0.6rem;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +41,13 @@
         <div class="container">
             <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/customer/cart">Cart</a>
+                <a class="nav-link position-relative" href="/customer/cart">
+                    Cart
+                    <span th:if="${cartItemCount > 0}" 
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+                        <span th:text="${cartItemCount}"></span>
+                    </span>
+                </a>
                 <a class="nav-link" href="/customer/orders">Orders</a>
                 <a class="nav-link" href="/logout">Logout</a>
             </div>
@@ -72,13 +81,6 @@
                         <span th:text="${sortDir == 'asc' ? '↑' : '↓'}"></span>
                     </span>
                 </a>
-                <a th:href="@{/customer/books(sortBy='author', sortDir=${sortBy == 'author' && sortDir == 'asc' ? 'desc' : 'asc'})}" 
-                   class="btn btn-sm btn-outline-primary ms-2">
-                    Author
-                    <span th:if="${sortBy == 'author'}" class="sort-icon">
-                        <span th:text="${sortDir == 'asc' ? '↑' : '↓'}"></span>
-                    </span>
-                </a>
                 <a th:href="@{/customer/books(sortBy='price', sortDir=${sortBy == 'price' && sortDir == 'asc' ? 'desc' : 'asc'})}" 
                    class="btn btn-sm btn-outline-primary ms-2">
                     Price
@@ -107,9 +109,14 @@
                         </p>
                         <div class="d-flex justify-content-between">
                             <a th:href="@{/customer/books/details/{id}(id=${book.bookId})}" class="btn btn-primary btn-sm">Details</a>
-                            <a th:href="@{/customer/cart/add/{id}(id=${book.bookId})}" 
-                               class="btn btn-success btn-sm" 
-                               th:disabled="${book.stockQuantity <= 0}">Add to Cart</a>
+                            <form th:action="@{/customer/cart/add/{id}(id=${book.bookId})}" method="post" class="d-inline">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" 
+                                        class="btn btn-success btn-sm" 
+                                        th:disabled="${book.stockQuantity <= 0}">
+                                    Add to Cart
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -46,7 +46,6 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    // Constructors
     public Book() {
     }
 
@@ -65,7 +64,6 @@ public class Book {
         this.language = language;
     }
 
-    // Getters and Setters
     public Long getBookId() {
         return bookId;
     }
@@ -170,7 +168,6 @@ public class Book {
         this.reviews = reviews;
     }
 
-    // Helper methods for reviews
     public void addReview(Review review) {
         reviews.add(review);
         review.setBook(this);
@@ -181,7 +178,6 @@ public class Book {
         review.setBook(null);
     }
 
-    // toString() method
     @Override
     public String toString() {
         return "Book{" +

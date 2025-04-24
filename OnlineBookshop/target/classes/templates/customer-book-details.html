@@ -33,6 +33,9 @@
         .back-button {
             margin-top: 30px;
         }
+        .cart-badge {
+            font-size: 0.6rem;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +43,13 @@
         <div class="container">
             <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
             <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/customer/cart">Cart</a>
+                <a class="nav-link position-relative" href="/customer/cart">
+                    Cart
+                    <span th:if="${cartItemCount > 0}" 
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+                        <span th:text="${cartItemCount}"></span>
+                    </span>
+                </a>
                 <a class="nav-link" href="/customer/orders">My Orders</a>
                 <a class="nav-link" href="/logout">Logout</a>
             </div>
@@ -73,11 +82,17 @@
                 </div>
                 
                 <div class="mt-4">
-                    <a th:href="@{/customer/cart/add/{id}(id=${book.bookId})}" 
-                       class="btn btn-success btn-lg" 
-                       th:disabled="${book.stockQuantity <= 0}">
-                        Add to Cart
-                    </a>
+                    <form th:action="@{/customer/cart/add/{id}(id=${book.bookId})}" method="post" class="d-inline">
+                        <div class="input-group" style="width: 200px;">
+                            <input type="number" name="quantity" min="1" th:max="${book.stockQuantity}" 
+                                   value="1" class="form-control">
+                            <button type="submit" 
+                                    class="btn btn-success" 
+                                    th:disabled="${book.stockQuantity <= 0}">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
