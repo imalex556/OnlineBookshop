@@ -1,6 +1,7 @@
 package com.example.OnlineBookshop.model;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "reviews")
@@ -21,6 +22,10 @@ public class Review {
     private int rating;
     
     private String comment;
+    
+    @Column(name = "review_date", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date reviewDate = new Date();
 
     // Getters and Setters
     public Long getReviewId() {
@@ -61,5 +66,13 @@ public class Review {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Date getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(Date reviewDate) {
+        this.reviewDate = reviewDate;
     }
 }

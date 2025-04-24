@@ -34,7 +34,7 @@ public class Book {
     
     private String imageUrl;
     
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
     
     @Column(nullable = false)
@@ -43,9 +43,29 @@ public class Book {
     @Column(nullable = false)
     private String language;
     
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    // Constructors
+    public Book() {
+    }
+
+    public Book(String title, String author, String publisher, double price, 
+                String category, String isbn, int stockQuantity, String description, 
+                int pages, String language) {
+        this.title = title;
+        this.author = author;
+        this.publisher = publisher;
+        this.price = price;
+        this.category = category;
+        this.isbn = isbn;
+        this.stockQuantity = stockQuantity;
+        this.description = description;
+        this.pages = pages;
+        this.language = language;
+    }
+
+    // Getters and Setters
     public Long getBookId() {
         return bookId;
     }
@@ -148,5 +168,35 @@ public class Book {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    // Helper methods for reviews
+    public void addReview(Review review) {
+        reviews.add(review);
+        review.setBook(this);
+    }
+
+    public void removeReview(Review review) {
+        reviews.remove(review);
+        review.setBook(null);
+    }
+
+    // toString() method
+    @Override
+    public String toString() {
+        return "Book{" +
+                "bookId=" + bookId +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", stockQuantity=" + stockQuantity +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", description='" + description + '\'' +
+                ", pages=" + pages +
+                ", language='" + language + '\'' +
+                '}';
     }
 }

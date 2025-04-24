@@ -44,6 +44,31 @@ public class BookController {
         return "books_list";
     }
 
+    @GetMapping("/customer")
+    public String listBooksForCustomer(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model) {
+        
+        List<Book> books;
+        if (query != null && !query.isEmpty()) {
+            books = bookService.searchBooks(query);
+        } else if (category != null && !category.isEmpty()) {
+            books = bookService.getBooksByCategory(category);
+        } else {
+            books = bookService.getAllBooks();
+        }
+        
+        books = bookService.getSortStrategy(sortBy, sortDir).sort(books);
+        
+        model.addAttribute("books", books);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        return "customer-book-list";
+    }
+
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("book", new Book());
@@ -80,5 +105,12 @@ public class BookController {
     public String updateStock(@PathVariable Long id, @RequestParam int quantity) {
         bookService.updateStock(id, quantity);
         return "redirect:/books";
+    }
+
+    @GetMapping("/customer/details/{id}")
+    public String showBookDetailsForCustomer(@PathVariable Long id, Model model) {
+        Book book = bookService.getBookById(id);
+        model.addAttribute("book", book);
+        return "customer-book-details";
     }
 }

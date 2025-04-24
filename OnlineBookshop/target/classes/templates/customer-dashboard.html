@@ -29,7 +29,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
         <div class="container">
-            <a class="navbar-brand" href="#">Online Bookshop</a>
+            <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
             <div class="navbar-nav ms-auto">
                 <span class="navbar-text me-3">
                     Welcome, <span th:text="${session.user.username}"></span>
@@ -43,7 +43,7 @@
 
     <div class="dashboard-container">
         <div class="search-box">
-            <form th:action="@{/books}" method="get" class="row g-3">
+            <form th:action="@{/customer/books}" method="get" class="row g-3">
                 <div class="col-md-8">
                     <input type="text" name="query" class="form-control" placeholder="Search books by title, author, or category">
                 </div>
@@ -51,7 +51,7 @@
                     <button type="submit" class="btn btn-primary w-100">Search</button>
                 </div>
                 <div class="col-md-2">
-                    <a href="/books" class="btn btn-secondary w-100">Browse All</a>
+                    <a href="/customer/books" class="btn btn-secondary w-100">Browse All</a>
                 </div>
             </form>
         </div>
@@ -60,11 +60,11 @@
             <div class="col">
                 <h2>Book Categories</h2>
                 <div class="d-flex flex-wrap">
-                    <a href="/books?category=Fiction" class="btn btn-outline-primary me-2 mb-2">Fiction</a>
-                    <a href="/books?category=Science" class="btn btn-outline-primary me-2 mb-2">Science</a>
-                    <a href="/books?category=Technology" class="btn btn-outline-primary me-2 mb-2">Technology</a>
-                    <a href="/books?category=Business" class="btn btn-outline-primary me-2 mb-2">Business</a>
-                    <a href="/books?category=Biography" class="btn btn-outline-primary me-2 mb-2">Biography</a>
+                    <a href="/customer/books?category=Fiction" class="btn btn-outline-primary me-2 mb-2">Fiction</a>
+                    <a href="/customer/books?category=Science" class="btn btn-outline-primary me-2 mb-2">Science</a>
+                    <a href="/customer/books?category=Technology" class="btn btn-outline-primary me-2 mb-2">Technology</a>
+                    <a href="/customer/books?category=Business" class="btn btn-outline-primary me-2 mb-2">Business</a>
+                    <a href="/customer/books?category=Biography" class="btn btn-outline-primary me-2 mb-2">Biography</a>
                 </div>
             </div>
         </div>

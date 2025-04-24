@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Details - Online Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .book-details-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .book-image {
+            max-height: 500px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+        .book-info {
+            padding-left: 30px;
+        }
+        .price {
+            color: #0d6efd;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .stock-status {
+            font-size: 1.2rem;
+        }
+        .description {
+            margin-top: 30px;
+            white-space: pre-line;
+        }
+        .back-button {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/customer/cart">Cart</a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="book-details-container">
+        <div class="row">
+            <div class="col-md-5">
+                <img th:src="${book.imageUrl}" class="img-fluid book-image" alt="Book cover">
+            </div>
+            <div class="col-md-7 book-info">
+                <h1 th:text="${book.title}"></h1>
+                <h3 class="text-muted" th:text="${book.author}"></h3>
+                
+                <div class="mt-4">
+                    <span class="price">$<span th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span></span>
+                    <span th:if="${book.stockQuantity > 0}" class="text-success stock-status ms-3">In Stock</span>
+                    <span th:if="${book.stockQuantity <= 0}" class="text-danger stock-status ms-3">Out of Stock</span>
+                </div>
+                
+                <hr>
+                
+                <div>
+                    <p><strong>Publisher:</strong> <span th:text="${book.publisher}"></span></p>
+                    <p><strong>Category:</strong> <span th:text="${book.category}"></span></p>
+                    <p><strong>ISBN:</strong> <span th:text="${book.isbn}"></span></p>
+                    <p><strong>Pages:</strong> <span th:text="${book.pages}"></span></p>
+                    <p><strong>Language:</strong> <span th:text="${book.language}"></span></p>
+                </div>
+                
+                <div class="mt-4">
+                    <a th:href="@{/customer/cart/add/{id}(id=${book.bookId})}" 
+                       class="btn btn-success btn-lg" 
+                       th:disabled="${book.stockQuantity <= 0}">
+                        Add to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>Description</h3>
+                <div class="description" th:text="${book.description}"></div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3>Reviews</h3>
+                <div th:if="${book.reviews.empty}" class="alert alert-info">
+                    No reviews yet. Be the first to review this book!
+                </div>
+                <div th:each="review : ${book.reviews}" class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title" th:text="${review.user.username}"></h5>
+                            <div class="text-warning">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <span th:if="${i <= review.rating}">★</span>
+                                    <span th:if="${i > review.rating}">☆</span>
+                                </span>
+                            </div>
+                        </div>
+                        <p class="card-text" th:text="${review.comment}"></p>
+                        <p class="text-muted small" th:text="${#dates.format(review.reviewDate, 'MMMM dd, yyyy')}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12 back-button">
+                <a href="javascript:history.back()" class="btn btn-secondary">Back to Books</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
