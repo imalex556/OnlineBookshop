@@ -34,10 +34,18 @@ public class Book {
     
     private String imageUrl;
     
+    @Column(nullable = false)
+    private String description;
+    
+    @Column(nullable = false)
+    private int pages;
+    
+    @Column(nullable = false)
+    private String language;
+    
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-    // Getters and Setters
     public Long getBookId() {
         return bookId;
     }
@@ -108,6 +116,30 @@ public class Book {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public List<Review> getReviews() {
