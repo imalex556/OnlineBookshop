@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Dashboard - Online Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .card {
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .nav-pills .nav-link.active {
+            background-color: #0d6efd;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Online Bookshop</a>
+            <div class="navbar-nav ms-auto">
+                <span class="navbar-text me-3">
+                    Welcome, <span th:text="${session.user.username}"></span>
+                </span>
+                <a class="nav-link" href="/customer/profile">My Profile</a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="search-box">
+            <form th:action="@{/books}" method="get" class="row g-3">
+                <div class="col-md-8">
+                    <input type="text" name="query" class="form-control" placeholder="Search books by title, author, or category">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+                <div class="col-md-2">
+                    <a href="/books" class="btn btn-secondary w-100">Browse All</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col">
+                <h2>Book Categories</h2>
+                <div class="d-flex flex-wrap">
+                    <a href="/books?category=Fiction" class="btn btn-outline-primary me-2 mb-2">Fiction</a>
+                    <a href="/books?category=Science" class="btn btn-outline-primary me-2 mb-2">Science</a>
+                    <a href="/books?category=Technology" class="btn btn-outline-primary me-2 mb-2">Technology</a>
+                    <a href="/books?category=Business" class="btn btn-outline-primary me-2 mb-2">Business</a>
+                    <a href="/books?category=Biography" class="btn btn-outline-primary me-2 mb-2">Biography</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">My Profile</h5>
+                        <p class="card-text">View and update your personal information, shipping address, and payment methods</p>
+                        <a href="/customer/profile" class="btn btn-primary">Go to Profile</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">My Orders</h5>
+                        <p class="card-text">View your order history and track current orders</p>
+                        <a href="/customer/orders" class="btn btn-primary">View Orders</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Shopping Cart</h5>
+                        <p class="card-text">Review items in your cart and proceed to checkout</p>
+                        <a href="/customer/cart" class="btn btn-primary">View Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <h2>Recommended For You</h2>
+                <div class="alert alert-info">
+                    Recommended books based on your preferences will appear here
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <h2>Recently Viewed</h2>
+                <div class="alert alert-info">
+                    Your recently viewed books will appear here
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

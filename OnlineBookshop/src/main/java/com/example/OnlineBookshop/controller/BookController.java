@@ -41,7 +41,7 @@ public class BookController {
         model.addAttribute("books", books);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDir", sortDir);
-        return "books_list";
+        return "book-list";
     }
 
     @GetMapping("/add")

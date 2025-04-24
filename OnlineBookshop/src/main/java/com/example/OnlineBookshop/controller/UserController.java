@@ -62,7 +62,7 @@ public class UserController {
         if (user.getRole() == User.Role.ADMIN) {
             return "redirect:/admin/dashboard";
         }
-        return "redirect:/books";
+        return "redirect:/customer/dashboard"; 
     }
 
     @GetMapping("/logout")
