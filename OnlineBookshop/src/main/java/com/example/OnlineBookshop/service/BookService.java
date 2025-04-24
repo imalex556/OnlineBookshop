@@ -3,13 +3,8 @@ package com.example.OnlineBookshop.service;
 import com.example.OnlineBookshop.model.Book;
 import com.example.OnlineBookshop.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
-interface SortStrategy {
-    List<Book> sort(List<Book> books);
-}
 
 @Service
 public class BookService {
@@ -20,7 +15,7 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    private static class SortByTitleAsc implements SortStrategy {
+    public static class SortByTitleAsc implements SortStrategy {
         @Override
         public List<Book> sort(List<Book> books) {
             books.sort((b1, b2) -> b1.getTitle().compareToIgnoreCase(b2.getTitle()));
@@ -28,7 +23,7 @@ public class BookService {
         }
     }
 
-    private static class SortByTitleDesc implements SortStrategy {
+    public static class SortByTitleDesc implements SortStrategy {
         @Override
         public List<Book> sort(List<Book> books) {
             books.sort((b1, b2) -> b2.getTitle().compareToIgnoreCase(b1.getTitle()));
@@ -36,7 +31,7 @@ public class BookService {
         }
     }
 
-    private static class SortByPriceAsc implements SortStrategy {
+    public static class SortByPriceAsc implements SortStrategy {
         @Override
         public List<Book> sort(List<Book> books) {
             books.sort((b1, b2) -> Double.compare(b1.getPrice(), b2.getPrice()));
@@ -44,7 +39,7 @@ public class BookService {
         }
     }
 
-    private static class SortByPriceDesc implements SortStrategy {
+    public static class SortByPriceDesc implements SortStrategy {
         @Override
         public List<Book> sort(List<Book> books) {
             books.sort((b1, b2) -> Double.compare(b2.getPrice(), b1.getPrice()));
