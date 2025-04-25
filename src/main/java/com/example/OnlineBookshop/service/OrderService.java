@@ -91,4 +91,15 @@ public class OrderService {
                 .filter(order -> order.getUser().getUserId().equals(user.getUserId()))
                 .orElse(null);
     }
+    
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    public void updateOrderStatus(Long orderId, Order.OrderStatus status) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
 }

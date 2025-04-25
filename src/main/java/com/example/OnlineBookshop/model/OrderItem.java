@@ -1,3 +1,4 @@
+
 package com.example.OnlineBookshop.model;
 
 import jakarta.persistence.*;

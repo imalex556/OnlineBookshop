@@ -16,15 +16,17 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#">Online Bookshop Admin</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="/books">Manage Books</a>
-                <a class="nav-link" href="/logout">Logout</a>
-            </div>
-        </div>
-    </nav>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+	    <div class="container">
+	        <a class="navbar-brand" href="#">Online Bookshop Admin</a>
+	        <div class="navbar-nav">
+	            <a class="nav-link" href="/books">Manage Books</a>
+	            <a class="nav-link" href="/admin/users">Manage Users</a>
+	            <a class="nav-link" href="/admin/orders">View Orders</a>
+	            <a class="nav-link" href="/logout">Logout</a>
+	        </div>
+	    </div>
+	</nav>
 
     <div class="dashboard-container">
         <h1 class="mb-4">Admin Dashboard</h1>
@@ -45,7 +47,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Users Management</h5>
                         <p class="card-text">View and manage user accounts</p>
-                        <a href="#" class="btn btn-light">Manage Users</a>
+                        <a href="/admin/users" class="btn btn-light">Manage Users</a>
                     </div>
                 </div>
             </div>
@@ -55,7 +57,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Orders</h5>
                         <p class="card-text">View and manage customer orders</p>
-                        <a href="#" class="btn btn-light">View Orders</a>
+                        <a href="/admin/orders" class="btn btn-light">View Orders</a>
                     </div>
                 </div>
             </div>
