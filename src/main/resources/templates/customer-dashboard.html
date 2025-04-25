@@ -36,6 +36,11 @@
             border-radius: 10px;
             margin: 10px 0;
         }
+        .progress-text {
+            color: #000;
+            font-weight: bold;
+            text-shadow: 0 0 2px white;
+        }
         .discount-badge {
             background-color: #198754;
             color: white;
@@ -76,7 +81,9 @@
                          th:aria-valuenow="${10 - ordersUntilDiscount}"
                          aria-valuemin="0" 
                          aria-valuemax="10">
-                        <span th:text="${10 - ordersUntilDiscount}"></span>/10
+                        <span class="progress-text">
+                            <span th:text="${10 - ordersUntilDiscount}"></span>/10
+                        </span>
                     </div>
                 </div>
                 <p class="small text-muted">Every 10 orders earn you a 20% discount on your next purchase.</p>

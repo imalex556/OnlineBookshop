@@ -3,12 +3,12 @@ package com.example.OnlineBookshop.service;
 import com.example.OnlineBookshop.model.*;
 import com.example.OnlineBookshop.repository.BookRepository;
 import com.example.OnlineBookshop.repository.OrderRepository;
+import com.example.OnlineBookshop.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,14 +16,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final BookRepository bookRepository;
     private final CartService cartService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public OrderService(OrderRepository orderRepository, 
-                       BookRepository bookRepository,
-                       CartService cartService) {
+    public OrderService(OrderRepository orderRepository,
+                        BookRepository bookRepository,
+                        CartService cartService,
+                        UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.bookRepository = bookRepository;
         this.cartService = cartService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -44,9 +47,15 @@ public class OrderService {
         if (user.getPaymentMethod() == null || user.getPaymentMethod().isEmpty()) {
             throw new RuntimeException("Payment method is required");
         }
-        if ("Credit Card".equals(user.getPaymentMethod()) && 
+        if ("Credit Card".equals(user.getPaymentMethod()) &&
             (user.getCardNumber() == null || user.getCardNumber().isEmpty())) {
             throw new RuntimeException("Card details are required for credit card payment");
+        }
+
+        double totalAmount = cart.getTotalPrice();
+        if (user.isHasDiscount()) {
+            totalAmount *= 0.8;
+            user.setHasDiscount(false);
         }
 
         Order order = new Order();
@@ -54,7 +63,7 @@ public class OrderService {
         order.setShippingAddress(user.getShippingAddress());
         order.setPaymentMethod(user.getPaymentMethod());
         order.setCardNumber(user.getCardNumber());
-        order.setTotalAmount(cart.getTotalPrice());
+        order.setTotalAmount(totalAmount);
         order.setStatus(Order.OrderStatus.APPROVED);
 
         for (CartItem cartItem : cart.getItems()) {
@@ -68,6 +77,14 @@ public class OrderService {
             book.setStockQuantity(book.getStockQuantity() - cartItem.getQuantity());
             bookRepository.save(book);
         }
+
+        int newOrderCount = user.getOrderCount() + 1;
+        user.setOrderCount(newOrderCount);
+        if (newOrderCount >= 10) {
+            user.setHasDiscount(true);
+            user.setOrderCount(0);
+        }
+        userRepository.save(user); 
 
         Order savedOrder = orderRepository.save(order);
         cartService.clearCart(session);
@@ -91,14 +108,14 @@ public class OrderService {
                 .filter(order -> order.getUser().getUserId().equals(user.getUserId()))
                 .orElse(null);
     }
-    
+
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
     public void updateOrderStatus(Long orderId, Order.OrderStatus status) {
         Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new RuntimeException("Order not found"));
         order.setStatus(status);
         orderRepository.save(order);
     }
