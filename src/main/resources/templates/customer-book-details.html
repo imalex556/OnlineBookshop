@@ -36,6 +36,22 @@
         .cart-badge {
             font-size: 0.6rem;
         }
+		.review-form {
+		    background-color: #f8f9fa;
+		    padding: 20px;
+		    border-radius: 8px;
+		    margin-top: 30px;
+		}
+		.star-rating {
+		    font-size: 1.5rem;
+		    cursor: pointer;
+		}
+		.star-rating .bi-star {
+		    color: #ddd;
+		}
+		.star-rating .bi-star-fill {
+		    color: #ffd700;
+		}
     </style>
 </head>
 <body>
@@ -94,6 +110,36 @@
                         </div>
                     </form>
                 </div>
+				<div class="row mt-4">
+				            <div class="col-12">
+				                <div class="review-form">
+				                    <h4>Write a Review</h4>
+				                    <form th:action="@{/customer/reviews/submit/{id}(id=${book.bookId})}" method="post">
+				                        <div class="mb-3">
+				                            <label class="form-label">Rating</label>
+				                            <div class="star-rating">
+				                                <select name="rating" class="form-select" required>
+				                                    <option value="">Select rating</option>
+				                                    <option value="5">5 Stars</option>
+				                                    <option value="4">4 Stars</option>
+				                                    <option value="3">3 Stars</option>
+				                                    <option value="2">2 Stars</option>
+				                                    <option value="1">1 Star</option>
+				                                </select>
+				                            </div>
+				                        </div>
+				                        
+				                        <div class="mb-3">
+				                            <label class="form-label">Comment</label>
+				                            <textarea name="comment" class="form-control" rows="4" 
+				                                      placeholder="Write your review..." required></textarea>
+				                        </div>
+				                        
+				                        <button type="submit" class="btn btn-primary">Submit Review</button>
+				                    </form>
+				                </div>
+				            </div>
+				        </div>
             </div>
         </div>
         
