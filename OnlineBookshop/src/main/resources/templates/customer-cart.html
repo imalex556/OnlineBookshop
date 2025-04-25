@@ -25,6 +25,18 @@
         .cart-badge {
             font-size: 0.6rem;
         }
+        .cart-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .cart-item-body {
+            padding: 1.5rem;
+        }
+        .stock-warning {
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
@@ -54,13 +66,13 @@
         
         <div th:if="${cart != null && !cart.items.empty}" class="row">
             <div class="col-md-8">
-                <div class="card mb-3" th:each="item : ${cart.items}">
-                    <div class="row g-0">
-                        <div class="col-md-3">
-                            <img th:src="${item.book.imageUrl}" class="img-fluid rounded-start cart-item-image" alt="Book cover">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body">
+                <div class="card cart-item" th:each="item : ${cart.items}">
+                    <div class="card-body cart-item-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img th:src="${item.book.imageUrl}" class="img-fluid rounded cart-item-image" alt="Book cover">
+                            </div>
+                            <div class="col-md-9">
                                 <h5 class="card-title" th:text="${item.book.title}"></h5>
                                 <p class="card-text">
                                     <strong>Author:</strong> <span th:text="${item.book.author}"></span><br>
@@ -71,6 +83,9 @@
                                                th:max="${item.book.stockQuantity + item.quantity}" class="quantity-input">
                                         <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
                                     </form>
+                                    <div th:if="${item.quantity > item.book.stockQuantity}" class="stock-warning mt-1">
+                                        Only <span th:text="${item.book.stockQuantity}"></span> available in stock
+                                    </div>
                                 </p>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="text-muted">
@@ -120,5 +135,7 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
