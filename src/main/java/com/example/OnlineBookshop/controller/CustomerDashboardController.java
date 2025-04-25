@@ -29,6 +29,7 @@ public class CustomerDashboardController {
             return "redirect:/login";
         }
 
+        model.addAttribute("hasDiscount", user.isHasDiscount());
         model.addAttribute("ordersUntilDiscount", 10 - user.getOrderCount());
         return "customer-dashboard";
     }
