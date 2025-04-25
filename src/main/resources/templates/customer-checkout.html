@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - Online Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .order-summary {
+            position: sticky;
+            top: 20px;
+        }
+        .checkout-item-image {
+            max-height: 100px;
+            object-fit: contain;
+        }
+        .payment-method-icon {
+            width: 40px;
+            height: 25px;
+            object-fit: contain;
+            margin-right: 10px;
+        }
+        .missing-details-alert {
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/customer/dashboard">Dashboard</a>
+                <a class="nav-link" href="/customer/cart">Cart</a>
+                <a class="nav-link" href="/customer/orders">Orders</a>
+                <a class="nav-link" href="/customer/profile">Profile</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <h1 class="mb-4">Checkout</h1>
+        
+        <div th:if="${!hasRequiredDetails}" class="alert alert-warning missing-details-alert">
+            <h4 class="alert-heading">Missing Required Information</h4>
+            <p>Before you can proceed with checkout, please complete your:</p>
+            <ul>
+                <li th:if="${user.shippingAddress == null || user.shippingAddress.isEmpty()}">Shipping address</li>
+                <li th:if="${user.paymentMethod == null || user.paymentMethod.isEmpty()}">Payment method</li>
+                <li th:if="${'Credit Card' == user.paymentMethod && (user.cardNumber == null || user.cardNumber.isEmpty())}">Credit card details</li>
+            </ul>
+            <hr>
+            <a href="/customer/profile" class="btn btn-primary">Update Profile</a>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger">
+            <span th:text="${error}"></span>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Shipping Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${user.shippingAddress != null && !user.shippingAddress.isEmpty()}">
+                            <p th:text="${user.shippingAddress}"></p>
+                            <a href="/customer/profile" class="btn btn-sm btn-outline-primary">Change</a>
+                        </div>
+                        <div th:if="${user.shippingAddress == null || user.shippingAddress.isEmpty()}">
+                            <p class="text-danger">No shipping address provided</p>
+                            <a href="/customer/profile" class="btn btn-sm btn-primary">Add Shipping Address</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Payment Method</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${user.paymentMethod != null && !user.paymentMethod.isEmpty()}">
+                            <div class="d-flex align-items-center mb-2">
+                                <span th:if="${user.paymentMethod == 'Credit Card'}">
+                                    <img src="/images/credit-card.png" class="payment-method-icon" alt="Credit Card">
+                                </span>
+                                <h5 th:text="${user.paymentMethod}"></h5>
+                            </div>
+                            
+                            <div th:if="${user.paymentMethod == 'Credit Card'}">
+                                <p>Card ending in: <span th:text="${user.cardNumber != null ? user.cardNumber.substring(user.cardNumber.length() - 4) : ''}"></span></p>
+                                <p>Expires: <span th:text="${user.expiryDate}"></span></p>
+                            </div>
+                            
+                            <a href="/customer/profile" class="btn btn-sm btn-outline-primary">Change</a>
+                        </div>
+                        <div th:if="${user.paymentMethod == null || user.paymentMethod.isEmpty()}">
+                            <p class="text-danger">No payment method selected</p>
+                            <a href="/customer/profile" class="btn btn-sm btn-primary">Add Payment Method</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:each="item : ${cart.items}" class="d-flex mb-3 pb-3 border-bottom">
+                            <div class="flex-shrink-0">
+                                <img th:src="${item.book.imageUrl}" class="checkout-item-image" alt="Book cover">
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h6 th:text="${item.book.title}"></h6>
+                                <p class="mb-1">by <span th:text="${item.book.author}"></span></p>
+                                <p class="mb-1">Quantity: <span th:text="${item.quantity}"></span></p>
+                                <p class="mb-0">Price: $<span th:text="${#numbers.formatDecimal(item.book.price, 1, 2)}"></span></p>
+                            </div>
+                            <div class="flex-shrink-0 text-end">
+                                <p class="mb-0">$<span th:text="${#numbers.formatDecimal(item.book.price * item.quantity, 1, 2)}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card order-summary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>$<span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 2)}"></span></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <span>Free</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span>$<span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 2)}"></span></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <form th:action="@{/customer/checkout/place-order}" method="post">
+                            <button type="submit" class="btn btn-primary w-100" th:disabled="${!hasRequiredDetails}">
+                                Place Order
+                            </button>
+                        </form>
+                        <a href="/customer/cart" class="btn btn-outline-secondary w-100 mt-2">Back to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

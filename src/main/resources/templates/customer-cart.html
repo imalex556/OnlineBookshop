@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - Online Bookshop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        .cart-item-image {
+            max-height: 150px;
+            object-fit: contain;
+        }
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+        }
+        .summary-card {
+            position: sticky;
+            top: 20px;
+        }
+        .cart-badge {
+            font-size: 0.6rem;
+        }
+        .cart-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.25rem;
+        }
+        .cart-item-body {
+            padding: 1.5rem;
+        }
+        .stock-warning {
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/customer/dashboard">Online Bookshop</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link position-relative" href="/customer/cart">
+                    Cart
+                    <span th:if="${cartItemCount > 0}" 
+                          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-badge">
+                        <span th:text="${cartItemCount}"></span>
+                    </span>
+                </a>
+                <a class="nav-link" href="/customer/orders">My Orders</a>
+                <a class="nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="cart-container">
+        <h1 class="mb-4">Your Shopping Cart</h1>
+        
+        <div th:if="${cart == null || cart.items.empty}" class="alert alert-info">
+            Your cart is empty. <a href="/customer/books">Browse books</a> to add items to your cart.
+        </div>
+        
+        <div th:if="${cart != null && !cart.items.empty}" class="row">
+            <div class="col-md-8">
+                <div class="card cart-item" th:each="item : ${cart.items}">
+                    <div class="card-body cart-item-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img th:src="${item.book.imageUrl}" class="img-fluid rounded cart-item-image" alt="Book cover">
+                            </div>
+                            <div class="col-md-9">
+                                <h5 class="card-title" th:text="${item.book.title}"></h5>
+                                <p class="card-text">
+                                    <strong>Author:</strong> <span th:text="${item.book.author}"></span><br>
+                                    <strong>Price:</strong> $<span th:text="${#numbers.formatDecimal(item.book.price, 1, 2)}"></span><br>
+                                    <strong>Quantity:</strong> 
+                                    <form th:action="@{/customer/cart/update/{id}(id=${item.book.bookId})}" method="post" class="d-inline">
+                                        <input type="number" name="quantity" th:value="${item.quantity}" min="1" 
+                                               th:max="${item.book.stockQuantity + item.quantity}" class="quantity-input">
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                                    </form>
+                                    <div th:if="${item.quantity > item.book.stockQuantity}" class="stock-warning mt-1">
+                                        Only <span th:text="${item.book.stockQuantity}"></span> available in stock
+                                    </div>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">
+                                        Subtotal: $<span th:text="${#numbers.formatDecimal(item.book.price * item.quantity, 1, 2)}"></span>
+                                    </span>
+                                    <form th:action="@{/customer/cart/remove/{id}(id=${item.book.bookId})}" method="post">
+                                        <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-end mb-4">
+                    <form th:action="@{/customer/cart/clear}" method="post">
+                        <button type="submit" class="btn btn-outline-danger">Clear Cart</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card summary-card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>$<span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 2)}"></span></span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping:</span>
+                            <span>Free</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span>$<span th:text="${#numbers.formatDecimal(cart.totalPrice, 1, 2)}"></span></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/customer/checkout" class="btn btn-primary w-100">Proceed to Checkout</a>
+                        <a href="/customer/books" class="btn btn-outline-secondary w-100 mt-2">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
