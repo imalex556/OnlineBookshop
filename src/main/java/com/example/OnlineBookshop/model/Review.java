@@ -27,7 +27,6 @@ public class Review {
     @Temporal(TemporalType.TIMESTAMP)
     private Date reviewDate = new Date();
 
-    // Getters and Setters
     public Long getReviewId() {
         return reviewId;
     }

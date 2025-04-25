@@ -1,5 +1,6 @@
 package com.example.OnlineBookshop.controller;
 
+import com.example.OnlineBookshop.model.User;
 import com.example.OnlineBookshop.service.CartService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,15 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public String viewCart(Model model, HttpSession session) {
+    public String showCart(HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        
         model.addAttribute("cart", cartService.getCart(session));
         model.addAttribute("cartItemCount", cartService.getCartItemCount(session));
+        model.addAttribute("hasDiscount", user.isHasDiscount());
         return "customer-cart";
     }
 

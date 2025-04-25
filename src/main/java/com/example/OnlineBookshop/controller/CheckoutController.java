@@ -40,7 +40,6 @@ public class CheckoutController {
         model.addAttribute("user", user);
         model.addAttribute("hasRequiredDetails", hasRequiredDetails);
 
-        // Loyalty info
         model.addAttribute("hasDiscount", user.isHasDiscount());
         model.addAttribute("ordersUntilDiscount", 10 - user.getOrderCount());
 
