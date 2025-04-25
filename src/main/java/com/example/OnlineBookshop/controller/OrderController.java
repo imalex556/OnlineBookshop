@@ -1,6 +1,7 @@
 package com.example.OnlineBookshop.controller;
 
 import com.example.OnlineBookshop.model.Order;
+import com.example.OnlineBookshop.model.User;
 import com.example.OnlineBookshop.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class OrderController {
 
     @GetMapping("/orders")
     public String viewOrders(HttpSession session, Model model) {
+    	User user = (User) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        
+        model.addAttribute("hasDiscount", user.isHasDiscount());
         model.addAttribute("orders", orderService.getUserOrders(session));
         return "customer-orders";
     }

@@ -20,7 +20,7 @@ public class CartController {
     }
 
     @GetMapping("/cart")
-    public String showCart(HttpSession session, Model model) {
+    public String viewCart(HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
