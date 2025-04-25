@@ -1,4 +1,3 @@
-// CheckoutController.java
 package com.example.OnlineBookshop.controller;
 
 import com.example.OnlineBookshop.model.Order;
@@ -32,7 +31,6 @@ public class CheckoutController {
             return "redirect:/login";
         }
 
-        // Check if user has required details
         boolean hasRequiredDetails = user.getShippingAddress() != null && !user.getShippingAddress().isEmpty() &&
                                    user.getPaymentMethod() != null && !user.getPaymentMethod().isEmpty() &&
                                    (!"Credit Card".equals(user.getPaymentMethod()) || 
